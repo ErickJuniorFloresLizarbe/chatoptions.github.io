@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Lobster&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Titillium+Web:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700&display=swap" rel="stylesheet">
+    <title>Chat de Opciones</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .chat-container {
+            max-width: 600px;
+            margin: auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            font-family: "Lobster", sans-serif;
+            font-weight: 400;
+            font-style: normal;
+        }
+
+        .message {
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            display: inline-flexbox;
+            opacity: 0;
+            transition: opacity 0.5s ease-in;
+        }
+
+        .user {
+            margin-left: auto;
+            max-width: 45%;
+            background-color: #e1ffc7;
+            text-align: start;
+            font-family: "Lobster", sans-serif;
+            font-weight: 400;
+            font-style: normal;
+        }
+
+        .assistant {
+            max-width: 45%;
+            background-color: #f1f1f1;
+            text-align: left;
+            font-family: "Lobster", sans-serif;
+            font-weight: 400;
+            font-style: normal;
+        }
+        @media (max-width: 768px) {
+
+            h1 {
+                text-align: start;
+                font-size: 20px;
+            }
+
+            .user {
+                max-width: 70%;
+                font-size: 14px;
+            }
+            .assistant {
+                max-width: 70%;
+                font-size: 14px;
+            }
+        }
+        .input-container {
+            margin-top: 20px;
+        }
+
+        select,
+        button {
+            margin: 5px 0;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: 100%;
+            font-family: "Lobster", sans-serif;
+            font-weight: 400;
+            font-style: normal;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-family: "Lobster", sans-serif;
+            font-weight: 400;
+            font-style: normal;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="chat-container">
+        <h1 id="title">Chat Inteligente de Opciones</h1>
+        <div id="chatMessages"></div> <br>
+
+        <div class="input-container">
+            <select id="optionSelect">
+                <option value="">Selecciona una opción</option>
+                <option value="1">¿Te gusta salir?</option>
+                <option value="2">¿Cuál es tu mayor miedo?</option>
+                <option value="3">¿Eres un experto en algo?</option>
+                <option value="4">¿Te gustaría viajar?</option>
+                <option value="5">¿Cómo te sientes hoy?</option>
+                <option value="6">¿Eres optimista?</option>
+                <option value="7">¿Cómo describirías tu sentido del humor?</option>
+                <option value="8">¿Qué harías si tuvieras un superpoder?</option>
+                <option value="9">¿Eres un soñador?</option>
+                <option value="10">¿Te consideras una persona afortunada?</option>
+            </select>
+            <button id="sendButton">Enviar</button>
+        </div>
+    </div>
+
+    <script>
+        function typeWriter(element, text, delay, callback) {
+            let index = 0;
+            function type() {
+                if (index < text.length) {
+                    element.innerHTML += text.charAt(index);
+                    element.style.opacity = 1; // Mostrar el mensaje
+                    index++;
+                    setTimeout(type, delay);
+                } else if (callback) {
+                    callback();
+                }
+            }
+            type();
+        }
+
+        // Respuestas predefinidas para las opciones
+            const responses = {
+            "1": "Claro, siempre y cuando no haya que socializar.",
+            "2": "Mi mayor miedo es que la gente sepa que no tengo idea de lo que estoy haciendo.",
+            "3": "Sí, en dar respuestas ingeniosas a preguntas que no deberían hacerse.",
+            "4": "Sí, a lugares donde no haya Wi-Fi, para ver cómo sobrevivo.",
+            "5": "Como un héroe en una película de bajo presupuesto: sobreviviendo, pero no convencido.",
+            "6": "Claro, siempre espero lo peor... así no me decepciono.",
+            "7": "Como una película de culto: no todos lo entienden, pero a mí me encanta.",
+            "8": "Haría que la gente dejara de hacer preguntas estúpidas... ¡eso sí que sería un superpoder!",
+            "9": "Sí, pero mis sueños son más como pesadillas con un toque de realidad.",
+            "10": "Claro, tengo la suerte de que mis problemas nunca se acaben.",
+        };
+
+
+        function addMessage(optionText, optionValue) {
+            const chatMessages = document.getElementById("chatMessages");
+            const userMessageDiv = document.createElement("div");
+            const assistantMessageDiv = document.createElement("div");
+
+            userMessageDiv.className = "message user";
+            assistantMessageDiv.className = "message assistant";
+
+            const userText = `${optionText}`; //Seleccionaste la Opción: 
+            const assistantText = responses[optionValue] || "Opción no válida.";
+
+            // Agregar el mensaje del usuario al chat
+            chatMessages.appendChild(userMessageDiv);
+
+            // Mostrar el mensaje del usuario con efecto de escritura
+            typeWriter(userMessageDiv, userText, 40, () => {
+                // Mostrar el mensaje del asistente después de un pequeño retraso
+                chatMessages.appendChild(assistantMessageDiv);
+                typeWriter(assistantMessageDiv, assistantText, 40);
+            });
+        }
+
+        // Manejar el evento de clic en el botón
+        document.getElementById("sendButton").addEventListener("click", () => {
+            const optionSelect = document.getElementById("optionSelect");
+            const selectedOptionValue = optionSelect.value;
+            const selectedOptionText = optionSelect.options[optionSelect.selectedIndex].text;
+
+            if (selectedOptionValue) {
+                addMessage(selectedOptionText, selectedOptionValue);
+                document.getElementById("optionSelect").value = ""; // Limpiar la selección
+            } else {
+                alert("Por favor, selecciona una opción.");
+            }
+        });
+    </script>
+</body>
+
+</html>
