@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="preconnect" href="https://fonts.googleapis.com">
+    
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Lobster&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Titillium+Web:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700&display=swap" rel="stylesheet">
     <title>Chat de Opciones</title>
@@ -116,28 +117,28 @@
         <div class="input-container">
             <select id="optionSelect">
                 <option value="">Selecciona una opción</option>
-                <option value="1">¿Te gusta salir?</option>
-                <option value="2">¿Cuál es tu mayor miedo?</option>
-                <option value="3">¿Eres un experto en algo?</option>
-                <option value="4">¿Te gustaría viajar?</option>
-                <option value="5">¿Cómo te sientes hoy?</option>
-                <option value="6">¿Eres optimista?</option>
-                <option value="7">¿Cómo describirías tu sentido del humor?</option>
-                <option value="8">¿Qué harías si tuvieras un superpoder?</option>
-                <option value="9">¿Eres un soñador?</option>
-                <option value="10">¿Te consideras una persona afortunada?</option>
+                <option value="1">Verdad o reto (equipo opcional)</option>
+                <option value="2">Dime un chiste</option>
+                <option value="3">Dato curioso</option>
             </select>
             <button id="sendButton">Enviar</button>
         </div>
     </div>
 
+
     <script>
+        // Efecto de escritura para el título
+        const titleElement = document.getElementById("title");
+        const titleText = titleElement.innerHTML;
+        titleElement.innerHTML = ""; 
+        typeWriter(titleElement, titleText, 60);
+
         function typeWriter(element, text, delay, callback) {
             let index = 0;
             function type() {
                 if (index < text.length) {
                     element.innerHTML += text.charAt(index);
-                    element.style.opacity = 1; // Mostrar el mensaje
+                    element.style.opacity = 1;
                     index++;
                     setTimeout(type, delay);
                 } else if (callback) {
@@ -147,20 +148,132 @@
             type();
         }
 
-        // Respuestas predefinidas para las opciones
-            const responses = {
-            "1": "Claro, siempre y cuando no haya que socializar.",
-            "2": "Mi mayor miedo es que la gente sepa que no tengo idea de lo que estoy haciendo.",
-            "3": "Sí, en dar respuestas ingeniosas a preguntas que no deberían hacerse.",
-            "4": "Sí, a lugares donde no haya Wi-Fi, para ver cómo sobrevivo.",
-            "5": "Como un héroe en una película de bajo presupuesto: sobreviviendo, pero no convencido.",
-            "6": "Claro, siempre espero lo peor... así no me decepciono.",
-            "7": "Como una película de culto: no todos lo entienden, pero a mí me encanta.",
-            "8": "Haría que la gente dejara de hacer preguntas estúpidas... ¡eso sí que sería un superpoder!",
-            "9": "Sí, pero mis sueños son más como pesadillas con un toque de realidad.",
-            "10": "Claro, tengo la suerte de que mis problemas nunca se acaben.",
-        };
+        // Respuestas predefinidas
+        const responses = {
+                "1": () => {
+                    const tipo = Math.random() < 0.5 ? 'verdad' : 'reto'; // Selecciona aleatoriamente entre 'verdad' o 'reto'
+                    return generarVerdadOReto(tipo); // Llama a la función con el tipo seleccionado
+                },
+                "2": () => generarChiste(),
+                "3": () => generarDatoCurioso(),
+            };
 
+        // Datos para Verdad o Reto
+            const verdadOReto = {
+                verdad: [
+                    "¿Cuál es tu mayor miedo?",
+                    "¿Alguna vez has roto una promesa importante?",
+                    "¿Cuál es tu recuerdo más vergonzoso?",
+                    "¿Qué es lo más loco que has hecho por amor?",
+                    "¿Alguna vez has tenido un enamoramiento platónico?",
+                    "¿Cuál es la mentira más grande que has contado?",
+                    "¿Qué harías si solo te quedara un día de vida?",
+                    "¿Te has enamorado de alguien a quien no deberías?",
+                    "¿Cuál es tu secreto más guardado?",
+                    "¿Has tenido algún sueño extraño? ¿Cuál fue?"
+                ],
+                reto: [
+                    "Haz 10 saltos en el lugar",
+                    "Canta una canción en voz alta.",
+                    "Baila como si nadie te estuviera mirando durante 1 minuto.",
+                    "Imita a tu celebridad favorita por 30 segundos.",
+                    "Haz una llamada a un amigo y dile que lo quieres.",
+                    "Haz una voltereta o un salto mortal, si puedes.",
+                    "Escribe una nota de amor y déjala en un lugar inesperado.",
+                    "Habla con acento extranjero durante 3 minutos.",
+                    "Dibuja un bigote en tu cara con un lápiz o marcador.",
+                    "Haz 5 flexiones de brazos en un minuto."
+                ]
+            };
+
+        // Array de chistes
+            const chistes = [
+                "Una vez traté de hacer yoga, pero terminé en una posición que solo el pretzel podría lograr. ¡Y no estoy hablando de la flexibilidad!",
+                "Mi vida es como una computadora: cada vez que intento hacer algo, aparece un error y tengo que reiniciar.",
+                "En la oficina, siempre me dicen que no soy un 'team player'. ¡Claro! A nadie le gusta jugar con alguien que se queda dormido en las reuniones.",
+                "Me dicen que el café es el mejor amigo del hombre. Si eso es cierto, entonces yo debo ser un café con doble dosis de sueño.",
+                "Decidí intentar cocinar algo nuevo y ahora tengo un nuevo plato: 'Carbonizado a la parrilla'. ¡Es una especialidad en casa!",
+                "Cuando intento seguir recetas, mis ingredientes suelen tener más éxito en la fuga que en la cocción. ¡Quizás deberían tener un mapa!",
+                "Soy tan malo con la tecnología que cuando mi computadora dice 'actualizando', yo empiezo a buscar un refresco para calmar los nervios.",
+                "Mis amigos dicen que debería ser más como un teléfono inteligente. ¡Yo les digo que prefiero ser un 'tonto' que no necesita cargar!",
+                "Decidí salir a correr por mi salud, pero mis piernas tienen su propia definición de 'huir'. ¡Aparentemente, son más rápidas que mi motivación!",
+                "El otro día empecé una dieta. Me siento genial... ¡hasta que veo una pizza! Entonces, mi fuerza de voluntad se convierte en un trozo extra.",
+                "Una vez le pregunté a mi pareja qué pensaba de mi sentido del humor. Ella dijo que es como un rompecabezas: ¡fácil de armar, pero nadie quiere hacerlo!",
+                "Intenté hacer un cumplido romántico, pero mi cerebro se bloqueó. Terminé diciéndole que tenía una 'bonita colección de calcetines'. ¡Gran manera de impresionar, ¿verdad?!",
+                "Algunas personas tienen un gran sentido del estilo. Yo tengo un estilo de supervivencia. ¡Sólo espero que mis zapatos no me abandonen!",
+                "La gente dice que uno debe quererse a sí mismo. A veces me miro al espejo y pienso: '¿En serio, esa es la mejor versión de mí?'",
+                "Mis hijos me dicen que soy un mal ejemplo. Pero, ¿qué esperan de alguien que aún no ha aprendido a hacer la colada sin dejar todo rosado?",
+                "Intento ser un padre ejemplar, pero a veces mi idea de una 'noche de película' es ponerme el pijama a las 7 y mirar cartoons.",
+                "Subo tantas fotos de comida que mi cuenta debería llamarse 'Instagram de cocinero fracasado'. ¡La única receta que sigo es la de mis amigos!",
+                "El otro día miré a mis amigos en redes sociales y pensé: '¿De verdad es necesario mostrar su desayuno? Yo apenas recuerdo qué comí ayer.'",
+                "La rutina diaria puede ser agotadora. Me levanto, voy a trabajar, vuelvo a casa y... ¡uf! ¿Alguien quiere ser yo por un día?",
+                "Cada día me miro al espejo y le digo: 'Hoy será un gran día'. Y luego me doy cuenta de que he olvidado mi café. ¡Error crítico!",
+                "A veces pienso que mi hogar es un refugio de animales, porque mis zapatos nunca están donde los dejé. ¡Debe haber un gato en la casa!",
+                "Una vez decidí ser más organizado, así que compré una pizarra. Ahora tengo una lista de cosas que no he hecho, ¡y no tengo idea de cómo borrarlas!",
+                "La otra noche soñé que estaba en una carrera, pero al final, todos se habían ido y yo estaba intentando recordar dónde dejé mis zapatos.",
+                "Cuando le dije a mi madre que quería ser astronauta, me respondió que primero debía aprender a no perder las llaves en mi propia casa.",
+                "Mis amigos dicen que soy un gran cocinero, pero mi perro no está tan seguro. ¡Cada vez que enciendo el fuego, él se va corriendo!",
+                "Una vez intenté meditar, pero no puedo dejar de pensar en la lista de cosas que tengo que hacer. Al final, terminé haciendo una lista en la meditación.",
+                "Siempre que mi teléfono suena, pienso que es un mensaje importante, pero suele ser solo un recordatorio de que tengo que tomar agua.",
+                "La gente me dice que soy muy gracioso, pero lo cierto es que mi humor es como el wifi: a veces se desconecta sin previo aviso.",
+                "Decidí empezar un diario, pero lo dejé porque siempre terminaba escribiendo sobre las cosas que olvidé hacer.",
+                "A veces pienso que mi mente es como un disco duro: está llena de datos inútiles y los archivos importantes nunca aparecen cuando los necesito.",
+                "Mis amigos siempre me dicen que haga ejercicio. La última vez que intenté, terminé haciendo un maratón... ¡de series en la televisión!",
+                "Un día decidí que iba a ser más positivo. Así que cambié mi fondo de pantalla a una playa. Ahora mi computadora solo me recuerda que no estoy allí.",
+                "La vida es como una caja de chocolates. Si no tienes cuidado, te vas a comer uno y después no podrás detenerte."
+            ];
+        
+
+        // Array de datos curiosos
+            const datosCuriosos = [
+                "El corazón de una ballena azul pesa alrededor de 400 kg.",
+                "Los humanos comparten el 50% de su ADN con los plátanos.",
+                "Las abejas pueden reconocer rostros humanos.",
+                "En Japón, las sandías cuadradas son populares y se cultivan para caber mejor en los refrigeradores.",
+                "Los pulpos tienen tres corazones y su sangre es de color azul.",
+                "Los flamencos son rosados debido a la cantidad de carotenoides en su dieta de algas y crustáceos.",
+                "Las tortugas pueden respirar a través de su trasero, un proceso conocido como 'respiración cloacal'.",
+                "Las jirafas tienen la misma cantidad de vértebras en el cuello que los humanos: siete.",
+                "Las hormigas no tienen pulmones; respiran a través de pequeños orificios en su exoesqueleto llamados espiráculos.",
+                "La lengua de una ballena azul puede pesar tanto como un elefante.",
+                "Los delfines duermen con un ojo abierto para estar alertas a los depredadores.",
+                "Los koalas tienen huellas dactilares muy similares a las humanas, incluso pueden confundirse en escenas del crimen.",
+                "Las estrellas de mar pueden regenerar sus brazos, y algunos pueden incluso regenerar un cuerpo completo a partir de un solo brazo.",
+                "Los osos polares son tan buenos nadadores que pueden nadar más de 100 kilómetros sin descansar.",
+                "El oro es el único metal que no se oxida en el agua o el aire.",
+                "Las cebras son negras con rayas blancas, no al revés.",
+                "El hongo más grande del mundo es un organismo llamado Armillaria ostoyae, que cubre más de 2,400 acres en Oregón.",
+                "Las ranas pueden congelarse completamente y volver a la vida cuando se descongelan.",
+                "Los canguros no pueden caminar hacia atrás debido a la forma de sus patas y cola.",
+                "El diamante más grande jamás encontrado es el Cullinan, que pesa 3,106 quilates.",
+                "Las vacas tienen amigos y se estresan cuando están separados de ellos.",
+                "Las ostras pueden cambiar de sexo varias veces a lo largo de su vida.",
+                "El kiwi es el único pájaro que puede detectar el olor de su comida bajo tierra.",
+                "Las ardillas pueden recordar la ubicación de miles de nueces escondidas durante el invierno.",
+                "El té es la bebida más consumida en el mundo después del agua.",
+                "Los plátanos son berries, mientras que las fresas no lo son.",
+                "Las ranas de cristal tienen una piel tan delgada que puedes ver sus órganos internos.",
+                "Los búhos pueden girar su cabeza hasta 270 grados.",
+                "El pez borrón puede cambiar de color para mezclarse con su entorno en segundos.",
+                "Los gatos tienen un órgano especial en el techo de la boca que les permite saborear los olores.",
+                "El sonido de un ladrido de perro puede viajar más de dos kilómetros en línea recta.",
+                "Los camellos pueden beber hasta 40 litros de agua en una sola sesión.",
+                "El helado fue creado por primera vez en China alrededor del 200 a.C.",
+                "La tierra es el único planeta en nuestro sistema solar que no lleva el nombre de un dios."
+            ];
+
+        // Funciones para generar respuestas aleatorias
+        function generarVerdadOReto(tipo) {
+            return verdadOReto[tipo][Math.floor(Math.random() * verdadOReto[tipo].length)];
+        }
+
+        function generarChiste() {
+            return chistes[Math.floor(Math.random() * chistes.length)];
+        }
+
+        function generarDatoCurioso() {
+            return datosCuriosos[Math.floor(Math.random() * datosCuriosos.length)];
+        }
 
         function addMessage(optionText, optionValue) {
             const chatMessages = document.getElementById("chatMessages");
@@ -170,15 +283,18 @@
             userMessageDiv.className = "message user";
             assistantMessageDiv.className = "message assistant";
 
-            const userText = `${optionText}`; //Seleccionaste la Opción: 
-            const assistantText = responses[optionValue] || "Opción no válida.";
+            const userText = `${optionText}`;
+            let assistantText;
 
-            // Agregar el mensaje del usuario al chat
+            if (typeof responses[optionValue] === 'function') {
+                assistantText = responses[optionValue]();
+            } else {
+                assistantText = responses[optionValue] || "Opción no válida.";
+            }
+
             chatMessages.appendChild(userMessageDiv);
 
-            // Mostrar el mensaje del usuario con efecto de escritura
             typeWriter(userMessageDiv, userText, 40, () => {
-                // Mostrar el mensaje del asistente después de un pequeño retraso
                 chatMessages.appendChild(assistantMessageDiv);
                 typeWriter(assistantMessageDiv, assistantText, 40);
             });
@@ -192,7 +308,7 @@
 
             if (selectedOptionValue) {
                 addMessage(selectedOptionText, selectedOptionValue);
-                document.getElementById("optionSelect").value = ""; // Limpiar la selección
+                document.getElementById("optionSelect").value = ""; 
             } else {
                 alert("Por favor, selecciona una opción.");
             }
